@@ -1,0 +1,5 @@
+{
+  "name": "Motion Graphics Generator",
+  "description": "An AI-powered application to generate professional motion graphics animations from an image, text, and creative directives. Specify animation style, pacing, colors, and more to create a visually compelling video.",
+  "requestFramePermissions": []
+}
