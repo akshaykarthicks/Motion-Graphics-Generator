@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { ANIMATION_STYLES, PACING_OPTIONS, COLOR_PALETTES, ASPECT_RATIOS } from '../constants';
 import type { FormState, ImageData } from '../types';
@@ -61,9 +60,9 @@ export const InputForm: React.FC<InputFormProps> = ({ onGenerate, disabled }) =>
   );
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 bg-gray-800 p-6 rounded-xl shadow-2xl">
-      <div>
-        <label htmlFor="image-upload" className="block text-sm font-medium text-gray-300 mb-1">1. Upload Image</label>
+    <form onSubmit={handleSubmit} className="space-y-8 bg-gray-800 p-6 rounded-xl shadow-2xl">
+      <fieldset>
+        <legend className="text-lg font-semibold text-white mb-4">1. Upload Source Image</legend>
         <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-600 border-dashed rounded-md">
           <div className="space-y-1 text-center">
             {imagePreview ? (
@@ -81,41 +80,53 @@ export const InputForm: React.FC<InputFormProps> = ({ onGenerate, disabled }) =>
             <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
           </div>
         </div>
-      </div>
+      </fieldset>
 
-      <div>
-        <label htmlFor="text-input" className="block text-sm font-medium text-gray-300 mb-1">2. Image Edit Commands</label>
-        <textarea
-          id="text-input"
-          rows={3}
-          value={formState.text}
-          onChange={(e) => handleChange('text', e.target.value)}
-          disabled={disabled}
-          className="w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-          placeholder="e.g., 'add a futuristic helmet', 'make the background a cyberpunk city'"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {renderSelect('style-select', '3. Animation Style', ANIMATION_STYLES, formState.style, 'style')}
-        {renderSelect('pacing-select', '4. Pacing & Timing', PACING_OPTIONS, formState.pacing, 'pacing')}
-        {renderSelect('palette-select', '5. Color Palette', COLOR_PALETTES, formState.palette, 'palette')}
-        {renderSelect('aspect-ratio-select', '6. Aspect Ratio', ASPECT_RATIOS, formState.aspectRatio, 'aspectRatio')}
-      </div>
-
-      <div>
-        <label htmlFor="duration-slider" className="block text-sm font-medium text-gray-300 mb-1">7. Duration: {formState.duration}s</label>
-        <input
-          id="duration-slider"
-          type="range"
-          min="3"
-          max="30"
-          value={formState.duration}
-          onChange={(e) => handleChange('duration', parseInt(e.target.value, 10))}
-          disabled={disabled}
-          className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-indigo-500"
-        />
-      </div>
+      <fieldset className="border-t border-gray-700 pt-6">
+        <legend className="text-lg font-semibold text-white mb-4">2. Define Animation & Edits</legend>
+        <div className="space-y-6">
+          {renderSelect('style-select', 'Base Animation Style', ANIMATION_STYLES, formState.style, 'style')}
+          <div>
+            <label htmlFor="text-input" className="block text-sm font-medium text-gray-300 mb-1">Image Edit Commands (Optional)</label>
+             <p className="text-xs text-gray-400 mb-2">Describe edits to apply during the animation. These will be combined with the base animation style.</p>
+            <textarea
+              id="text-input"
+              rows={3}
+              value={formState.text}
+              onChange={(e) => handleChange('text', e.target.value)}
+              disabled={disabled}
+              className="w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              placeholder="e.g., 'add a futuristic helmet', 'make the background a cyberpunk city'"
+            />
+          </div>
+        </div>
+      </fieldset>
+      
+      <fieldset className="border-t border-gray-700 pt-6">
+         <legend className="text-lg font-semibold text-white mb-4">3. Refine Technical Details</legend>
+         <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {renderSelect('pacing-select', 'Pacing & Timing', PACING_OPTIONS, formState.pacing, 'pacing')}
+                {renderSelect('palette-select', 'Color Palette', COLOR_PALETTES, formState.palette, 'palette')}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                {renderSelect('aspect-ratio-select', 'Aspect Ratio', ASPECT_RATIOS, formState.aspectRatio, 'aspectRatio')}
+                <div>
+                    <label htmlFor="duration-slider" className="block text-sm font-medium text-gray-300 mb-2">Duration: {formState.duration}s</label>
+                    <input
+                      id="duration-slider"
+                      type="range"
+                      min="3"
+                      max="30"
+                      value={formState.duration}
+                      onChange={(e) => handleChange('duration', parseInt(e.target.value, 10))}
+                      disabled={disabled}
+                      className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                    />
+                </div>
+            </div>
+         </div>
+      </fieldset>
 
       <button
         type="submit"

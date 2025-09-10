@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Header } from '../components/Header';
-import { InputForm } from '../components/InputForm';
-import { LoadingIndicator } from '../components/LoadingIndicator';
-import { VideoPlayer } from '../components/VideoPlayer';
-import type { FormState } from '../types';
 
-const Home: React.FC = () => {
+import React, { useState } from 'react';
+import { Header } from './components/Header';
+import { InputForm } from './components/InputForm';
+import { LoadingIndicator } from './components/LoadingIndicator';
+import { VideoPlayer } from './components/VideoPlayer';
+import type { FormState } from './types';
+import { generateAnimation } from './services/geminiService';
+
+const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -21,21 +23,8 @@ const Home: React.FC = () => {
     setVideoUrl(null);
 
     try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ settings, image }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'An unknown error occurred.');
-      }
-
-      const { videoUrl } = await response.json();
-      setVideoUrl(videoUrl);
+      const generatedUrl = await generateAnimation(settings, image);
+      setVideoUrl(generatedUrl);
     } catch (err) {
       console.error(err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred during video generation.');
@@ -53,6 +42,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 font-sans">
+      <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <InputForm key={formKey} onGenerate={handleGenerate} disabled={isLoading} />
@@ -89,4 +79,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default App;
